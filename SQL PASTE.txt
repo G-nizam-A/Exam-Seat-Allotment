@@ -1,0 +1,89 @@
+create database project;
+use project
+
+create table student(rollno varchar(50) primary key, name varchar(50) NOT NULL, branch varchar(50) NOT NULL, sem int NOT NULL,  year int NOT NULL, email varchar(50) NOT NULL, mobile bigint NOT NULL, address varchar(50) NOT NULL);
+
+create table studentlogin(rollno varchar(50) NOT NULL, password varchar(50) NOT NULL, foreign key(rollno) references student(rollno) on delete cascade);
+
+create table admin(admin_id varchar(50) primary key,admin_password varchar(50));
+
+create table room(RoomNo varchar(10) NOT NULL, FloorNo varchar(10) NOT NULL, primary key(RoomNo));
+
+create table seat(SeatNo int auto_increment, RoomNo varchar(10), col1 varchar(50) unique, col2 varchar(50) unique, col3 varchar(50) unique, col4 varchar(50) unique,primary key(SeatNo),foreign key(RoomNo) references room(RoomNo) on delete cascade);
+
+DELIMITER // 
+CREATE TRIGGER room
+BEFORE INSERT ON room
+FOR EACH ROW
+BEGIN
+IF NEW.RoomNo NOT LIKE 'Room ___'
+THEN
+signal sqlstate '45000'
+set message_text = 'Enter The Correct Pattern';
+END IF;
+END//
+
+DELIMITER // 
+CREATE TRIGGER stud
+BEFORE INSERT ON student
+FOR EACH ROW
+BEGIN
+IF NEW.rollno NOT LIKE 'CS___%' and NEW.rollno NOT LIKE 'ME___%' and NEW.rollno NOT LIKE 'IS___%' and NEW.rollno NOT LIKE 'CE___%' and NEW.rollno NOT LIKE 'EC___%'
+THEN
+signal sqlstate '45000'
+set message_text = 'Enter The Correct Pattern';
+END IF;
+END//
+
+DELIMITER // 
+CREATE TRIGGER login
+BEFORE INSERT ON studentlogin
+FOR EACH ROW
+BEGIN
+IF NEW.password <> NEW.rollno 
+THEN
+signal sqlstate '45000'
+set message_text = 'Invalid Password';
+END IF;
+END//
+
+DELIMITER //
+Create procedure getNo()
+begin
+select count(*) from student;
+end;
+//
+
+insert into student values('CS101','Anil','CS','1','1','anil@gmail.com',	'9876543210','Mangalore');
+insert into student values('CS102','Anoop','CS','1','1','anoop@gmail.com',	'6785432911','Mangalore');
+insert into student values('CS103','Alex','CS','3','2','alex@gmail.com',	'8765432101','Bangalore');
+insert into student values('CS104','Ajith','CS','3','2','ajith@gmail.com',	'9874543210','Mangalore');
+insert into student values('CS105','Ajay','CS','5','3','ajay@gmail.com',	'9872354210','Bangalore');
+insert into student values('CS110','Srijan Shetty','CS','6','3','srijan@gmail.com',	'8845678192','Mangalore');
+
+
+insert into student values('ME101','Akshay K','ME','1','1','akshayk@gmail.com',	'9876543210','Mangalore');
+insert into student values('ME102','Ajay D','ME','1','1','ajayd@gmail.com',	'6785432911','Mangalore');
+insert into student values('ME103','Devi P','ME','3','2','dsp@gmail.com',	'8765432101','Bangalore');
+insert into student values('ME104','Prakash G','ME','3','2','prakg@gmail.com',	'9874543210','Mangalore');
+insert into student values('ME105','Salman K','ME','5','3','salman@gmail.com',	'9872354210','Bangalore');
+
+insert into student values('IS101','Anisha H','IS','1','1','anisha@gmail.com',	'9876543210','Mangalore');
+insert into student values('IS102','Arvind K','IS','1','1','arvind@gmail.com',	'6785432911','Mangalore');
+insert into student values('IS103','Alia B','IS','3','2','aliab@gmail.com',	'8765432101','Bangalore');
+insert into student values('IS104','Trisha K','IS','3','2','trisha@gmail.com',	'9874543210','Mangalore');
+insert into student values('IS105','Shiva R','IS','5','3','shivar@gmail.com',	'9872354210','Bangalore');
+
+
+insert into student values('EC101','Amit M','EC','1','1','amitm@gmail.com',	'9876543210','Mangalore');
+insert into student values('EC102','Adhil A','EC','1','1','adhil@gmail.com',	'6785432911','Mangalore');
+insert into student values('EC103','Ashwin K','EC','3','2','ashwink@gmail.com',	'8765432101','Bangalore');
+insert into student values('EC104','Sachin R','EC','3','2','sachin@gmail.com',	'9874543210','Mangalore');
+insert into student values('EC105','Vinod K','EC','5','3','Vinod@gmail.com',	'9872354210','Bangalore');
+
+insert into student values('CE101','Akhil D','CE','1','1','akhil@gmail.com',	'9876543210','Mangalore');
+insert into student values('CE102','Raj D','CE','1','1','rajd@gmail.com',	'6785432911','Mangalore');
+insert into student values('CE103','Surya S','CE','3','2','surya@gmail.com',	'8765432101','Bangalore');
+insert into student values('CE104','Dhanush K','CE','3','2','dhanush@gmail.com','9874543210','Mangalore');
+insert into student values('CE105','Vijay j','CE','5','3','vijay@gmail.com',	'9872354210','Bangalore');
+
